@@ -33,3 +33,23 @@ It's mainly based on: [MERN TUTORIAL](https://medium.com/swlh/how-to-create-your
     * YARN
 
             yarn add express body-parser cors mongoose nodemon
+    
+    * Dependencies description:
+
+        * **Express**: a server framework.
+        * **Body Parser**: It's used to get the body of the network requests.
+        * **Nodemon**: It restarts the server when it sees changes in the code (for a better dev experience).
+        * **Cors**: package to manage Cross-Origin Resource Sharing (CORS) security mechanism.
+        * **Mongoose**: an elegant MongoDB object modeling for node.js
+
+5. Once the dependencies has been installed in the server folder you'll find a couple of files:
+
+        cd server
+        ls
+        node_modules  package.json  package-lock.json
+
+        * This means that this folder can be interpreted as a NodeJS proyect now.
+
+6. Creating the firstt NodeJS file: create /movies-app/server/index.js
+
+
