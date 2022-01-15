@@ -6,6 +6,8 @@ It's mainly based on: [MERN TUTORIAL](https://medium.com/swlh/how-to-create-your
 
 ## Steps
 
+### Initializing project
+
 1. Create a folder to contain the entire project
 
         mkdir movies-app
@@ -59,7 +61,9 @@ It's mainly based on: [MERN TUTORIAL](https://medium.com/swlh/how-to-create-your
 
    * After running the command you should be able to see a message by browsing [here](http://localhost:3000/)
 
-8. Installing MongoDB: follow this [instructions](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/) according to your OS. This installation is global and won't happen in your project directory.
+### Mongo DB Installation
+
+1. Installing MongoDB: follow this [instructions](https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/) according to your OS. This installation is global and won't happen in your project directory.
 
    * **In my case I'm running Ubuntu Mate 20.04 LTS so I had to run these steps**
      * Import the public key used by hte package management system
@@ -84,54 +88,58 @@ It's mainly based on: [MERN TUTORIAL](https://medium.com/swlh/how-to-create-your
 
 
 
-9. Init MongoDB : To run and manage your mongod process, you will be using your operating system's built-in init system.
+2. Init MongoDB : To run and manage your mongod process, you will be using your operating system's built-in init system.
    * To check which init system do you use use the following command
                 
           ps --no-headers -o comm 1
    
    * My system uses systemmd (systemctl)
 
-10. Start MongoDB
+3. Start MongoDB
 
         sudo systemctl start mongod
 
-11. Verify that MongoDB has started
+4. Verify that MongoDB has started
 
         sudo systemctl status mongod
 
-12. Stop MongoDB
+### Additional Mongo DB initialization Commands
+
+1. Stop MongoDB
 
         sudo systemctl stop mongod
 
-13. Restart MongoDB
+2. Restart MongoDB
 
         sudo systemctl restart mongod
 
    * You can follow the state of the process for errors or important messages by watching the output in the /var/log/mongodb/mongod.log file.
         
-14. mongo commands
-    * executes mongo db shell
-        
-          mongo
+### Mongo commands
+  * executes mongo db shell
+      
+        mongo
 
-    * shows current db 
-                
-          db
-    
-    * list all existing dbs
+  * shows current db 
+              
+        db
   
-          show dbs
+  * list all existing dbs
 
-    * switch to a different db if it doesn't exists it creates it.
-        
-          use  db_nanme
+        show dbs
 
-15. Create cinema db
+  * switch to a different db if it doesn't exists it creates it.
+      
+        use  db_nanme
+
+### Create a MongoDB instance for our sample project
+
+1. Create cinema db (using MongoDB)
 
         mongo
         use cinema
 
-16. Create a connection from our server using the Mongoose library. Create a new directory called DB inside server folder and a new index.js file inside.
+2. Create a connection from our server using the Mongoose library. Create a new directory called DB inside server folder and a new index.js file inside.
 
 ```js
 // code inside /server/db/index.js
@@ -175,7 +183,7 @@ app.get('/', (req, res) => {
 app.listen(apiPort, () => console.log(`Server running on port ${apiPort}`))
 ```
 
-18. Execute server using nodemon:
+3. Execute server using nodemon:
 
         nodemon index.js
 
@@ -183,3 +191,4 @@ app.listen(apiPort, () => console.log(`Server running on port ${apiPort}`))
     * If you have any problems use the following command to install nodemon globally:
 
           sudo npm install -g --force nodemon
+
