@@ -453,3 +453,121 @@ app.listen(apiPort, () => console.log(`Server running on port ${apiPort}`))
         client/src/components/index.js
         client/src/pages/index.js
         client/src/style/index.js
+
+4. Move the code contained in client/src/App.js to client/src/app/index.js
+
+5. Add code to client/src/index.js
+
+* Already had this code. It seems that is not necessary for this react version.
+
+```js
+import React from 'react'
+import ReactDOM from 'react-dom'
+import App from './app'
+
+ReactDOM.render(<App />, document.getElementById('root'))
+```
+
+6. Write the components of our project. Create the new files components/NavBar.jsx components/Logo.jsx components/Links.jsx
+
+```jsx
+import React, { Component } from 'react'
+import styled from 'styled-components'
+
+import logo from '../logo.svg'
+
+const Wrapper = styled.a.attrs({
+    className: 'navbar-brand',
+})``
+
+class Logo extends Component {
+    render() {
+        return (
+            <Wrapper href="https://sambarros.com">
+                <img src={logo} width="50" height="50" alt="sambarros.com" />
+            </Wrapper>
+        )
+    }
+}
+
+export default Logo
+```
+
+```jsx
+import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
+import styled from 'styled-components'
+
+const Collapse = styled.div.attrs({
+    className: 'collpase navbar-collapse',
+})``
+
+const List = styled.div.attrs({
+    className: 'navbar-nav mr-auto',
+})``
+
+const Item = styled.div.attrs({
+    className: 'collpase navbar-collapse',
+})``
+
+class Links extends Component {
+    render() {
+        return (
+            <React.Fragment>
+                <Link to="/" className="navbar-brand">
+                    My first MERN Application
+                </Link>
+                <Collapse>
+                    <List>
+                        <Item>
+                            <Link to="/movies/list" className="nav-link">
+                                List Movies
+                            </Link>
+                        </Item>
+                        <Item>
+                            <Link to="/movies/create" className="nav-link">
+                                Create Movie
+                            </Link>
+                        </Item>
+                    </List>
+                </Collapse>
+            </React.Fragment>
+        )
+    }
+}
+
+export default Links
+```
+
+```jsx
+import React, { Component } from 'react'
+import styled from 'styled-components'
+
+import Logo from './Logo'
+import Links from './Links'
+
+const Container = styled.div.attrs({
+    className: 'container',
+})``
+
+const Nav = styled.nav.attrs({
+    className: 'navbar navbar-expand-lg navbar-dark bg-dark',
+})`
+    margin-bottom: 20 px;
+`
+
+class NavBar extends Component {
+    render() {
+        return (
+            <Container>
+                <Nav>
+                    <Logo />
+                    <Links />
+                </Nav>
+            </Container>
+        )
+    }
+}
+
+export default NavBar
+```
