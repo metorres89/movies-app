@@ -427,3 +427,4 @@ app.listen(apiPort, () => console.log(`Server running on port ${apiPort}`))
 1. Execute the following command at the root /movies-app/
 
         npx create-react-app client
+
