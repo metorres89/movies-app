@@ -389,3 +389,36 @@ app.use('/api', movieRouter)
 
 app.listen(apiPort, () => console.log(`Server running on port ${apiPort}`))
 ```
+
+### Testing api and MongoDB
+
+1. Install Robo3T to inspect the MongoDB schema
+
+        sudo snap install robo3t-snap
+
+2. Install Postman to createt requests aiming to the running API
+
+        sudo snap install postman
+
+3. Invoke the endpoints
+
+* GET http://localhost:3000/api/movies will list all movies
+* GET http://localhost:3000/api/movie/61e364e2dbbfdf5c3c9ac02a will show the movie with id 61e364e2dbbfdf5c3c9ac02a
+* POST http://localhost:3000/api/movie with the following request body will create a movie:
+```JSON
+{
+    "name": "Avengers: Endgame",
+    "time": ["12:00", "14:15", "16:00", "21:30", "23:00"],
+    "rating": 8.8
+}
+```
+* PUT http://localhost:3000/api/movie/61e364e2dbbfdf5c3c9ac02a with the following request body will update the previous movie:
+```JSON
+{
+    "name": "Avengers: Endgame",
+    "time": ["12:00", "14:15", "16:00", "21:30", "23:00"],
+    "rating": 8.8
+}
+```
+* DELETE http://localhost:3000/api/movie/61e364e2dbbfdf5c3c9ac02a will delete the movie and return it's data.
+
