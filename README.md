@@ -445,3 +445,11 @@ app.listen(apiPort, () => console.log(`Server running on port ${apiPort}`))
    * React Router DOM: DOM bindings for React Routers.
 
             npm install styled-components react-table react-router-dom axios bootstrap --save
+
+3. Create Folder structure and base files for the frontend:
+
+        client/src/api/index.js
+        client/src/app/index.js
+        client/src/components/index.js
+        client/src/pages/index.js
+        client/src/style/index.js
