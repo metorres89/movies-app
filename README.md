@@ -428,3 +428,20 @@ app.listen(apiPort, () => console.log(`Server running on port ${apiPort}`))
 
         npx create-react-app client
 
+    * after this the client folder must have this sructure
+      
+            node_modules
+            public
+            src
+            package-lock.json
+            package.json
+            README.md
+
+2. Installing the dependencies required for the frontend. We’ll need: Axios, Bootstrap, StyledComponents, and React Table
+   * Axios: It’s a promise-based library to make asynchronous calls to the API.
+   * Bootstrap: It’s is an open-source toolkit and the most popular front-end component library where allows you for developing with HTML, CSS, and JS.
+   * StyledComponents: It allows you to write actual CSS code to style your components.
+   * React Ttable: It’s a lightweight, fast, and extendable data grid built for React.
+   * React Router DOM: DOM bindings for React Routers.
+
+            npm install styled-components react-table react-router-dom axios bootstrap --save
