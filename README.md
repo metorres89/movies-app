@@ -422,3 +422,8 @@ app.listen(apiPort, () => console.log(`Server running on port ${apiPort}`))
 ```
 * DELETE http://localhost:3000/api/movie/61e364e2dbbfdf5c3c9ac02a will delete the movie and return it's data.
 
+### Creating the fron-end with React
+
+1. Execute the following command at the root /movies-app/
+
+        npx create-react-app client
