@@ -636,3 +636,7 @@ export default App;
 ```
 
 * We use **Routes** instead of **Switch** because we are using a newer version of the React Routes dependency.
+
+
+4. We created a view for the movie list using React Table v7 Component (the tutorial was made using the v6). Some changes has been made to this component so we had to change a little the code presented in the tutorial. Basically the React Table v7 differs from the previous version because it doesn't assume any specific style or appearence. So currently it's rendering a basic HTML table that the user is responsible for customizing. More info [here](https://react-table.tanstack.com/docs/quick-start).
+
