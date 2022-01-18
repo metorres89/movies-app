@@ -11,6 +11,10 @@ const Delete = styled.div`
     color: #ff0000;
     cursor: pointer;
 `
+const Update = styled.div`
+    color: #ef9b0f;
+    cursor: pointer;
+`
 
 function Table({columns, data}) {
     // Use the state and functions returned from useTable to build your UI
@@ -72,6 +76,17 @@ class DeleteMovie extends Component {
     }
 }
 
+class UpdateMovie extends Component {
+  updateUser = event => {
+      event.preventDefault()
+
+      window.location.href = `/movies/update/${this.props.id}`
+  }
+
+  render() {
+      return <Update onClick={this.updateUser}>Update</Update>
+  }
+}
 
 class MovieList extends Component {
 
@@ -128,6 +143,7 @@ class MovieList extends Component {
                     return (
                         <span>
                             <DeleteMovie id={id} />
+                            <UpdateMovie id={id} />
                         </span>
                     )
                 },
