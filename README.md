@@ -571,3 +571,68 @@ class NavBar extends Component {
 
 export default NavBar
 ```
+
+### Connecting rest api with the FE
+
+1. We added javascript methods to call all the available endpoints in the API.
+
+/client/src/api/index.js
+
+```js
+import axios from 'axios'
+
+const api = axios.create({
+    baseURL: 'http://localhost:3000/api',
+})
+
+export const insertMovie = payload => api.post('/movie', payload)
+export const getAllMovies = () => api.get('/movies')
+export const updateMovieById = (id, payload) => api.put(`/movie/${id}`, payload)
+export const deleteMovieById = id => api.delete(`/movie/${id}`)
+export const getMovieById = id => api.get(`/movie/${id}`)
+
+const apis = {
+    insertMovie,
+    getAllMovies,
+    updateMovieById,
+    deleteMovieById,
+    getMovieById
+}
+
+export default apis
+```
+
+* this will make available all the methods inside apis when imported.
+
+2. We create "page" components to show the appropriate UI for movie list, insert or update. We create the following files:
+
+        /client/src/pages/MovieInsert.jsx
+        /client/src/pages/MovieList.jsx
+        /client/src/pages/MovieUpdate.jsx
+        /client/src/pages/index.js
+
+3. We added the previous components in the main app.js
+```js
+import React from 'react'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { NavBar } from '../components'
+import { MovieList, MovieInsert, MovieUpdate } from '../pages'
+import 'bootstrap/dist/css/bootstrap.min.css'
+
+function App() {
+  return (
+    <Router>
+        <NavBar />
+        <Routes>
+          <Route path="/movies/list" element={<MovieList></MovieList>}/>
+          <Route path="/movies/create" element={<MovieInsert></MovieInsert>}/>
+          <Route path="/movies/update/:id" exact component={<MovieUpdate></MovieUpdate>}/> 
+        </Routes>
+    </Router>
+  );
+}
+
+export default App;
+```
+
+* We use **Routes** instead of **Switch** because we are using a newer version of the React Routes dependency.
