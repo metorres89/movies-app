@@ -7,6 +7,10 @@ import styled from 'styled-components'
 const Wrapper = styled.div`
     padding:0 40px 40px;
 `
+const Delete = styled.div`
+    color: #ff0000;
+    cursor: pointer;
+`
 
 function Table({columns, data}) {
     // Use the state and functions returned from useTable to build your UI
@@ -48,6 +52,26 @@ function Table({columns, data}) {
     </table>
   )
 }
+
+class DeleteMovie extends Component {
+    deleteUser = event => {
+        event.preventDefault()
+
+        if (
+            window.confirm(
+                `Do tou want to delete the movie ${this.props.id} permanently?`,
+            )
+        ) {
+            api.deleteMovieById(this.props.id)
+            window.location.reload()
+        }
+    }
+
+    render() {
+        return <Delete onClick={this.deleteUser}>Delete</Delete>
+    }
+}
+
 
 class MovieList extends Component {
 
@@ -96,6 +120,19 @@ class MovieList extends Component {
                 Header: 'Time',
                 accessor: 'time',
                 Cell: props => <span>{props.value.join(' / ')}</span>,
+            },
+            {
+                Header: 'Actions',
+                Cell: function(props) {
+
+                    console.log(props);
+
+                    return (
+                        <span>
+                            <DeleteMovie id={1} />
+                        </span>
+                    )
+                },
             },
         ]
 
