@@ -124,12 +124,10 @@ class MovieList extends Component {
             {
                 Header: 'Actions',
                 Cell: function(props) {
-
-                    console.log(props);
-
+                    const id = props.cell.row.original._id;
                     return (
                         <span>
-                            <DeleteMovie id={1} />
+                            <DeleteMovie id={id} />
                         </span>
                     )
                 },
