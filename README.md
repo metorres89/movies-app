@@ -638,5 +638,132 @@ export default App;
 * We use **Routes** instead of **Switch** because we are using a newer version of the React Routes dependency.
 
 
-4. We created a view for the movie list using React Table v7 Component (the tutorial was made using the v6). Some changes has been made to this component so we had to change a little the code presented in the tutorial. Basically the React Table v7 differs from the previous version because it doesn't assume any specific style or appearence. So currently it's rendering a basic HTML table that the user is responsible for customizing. More info [here](https://react-table.tanstack.com/docs/quick-start).
+4. We created a view for the movie list in MovieList.jsx using React Table v7 Component (the tutorial was made using the v6). Some changes has been made to this component so we had to change a little the code presented in the tutorial. Basically the React Table v7 differs from the previous version because it doesn't assume any specific style or appearence. So currently it's rendering a basic HTML table that the user is responsible for customizing. More info [here](https://react-table.tanstack.com/docs/quick-start).
+
+5. Now we have to add code in the MovieInsert.jsx and MovieUpdate.jsx in order to be able to use the insert and update endpoints of the api.
+
+```jsx
+import React, { Component } from 'react'
+import api from '../api'
+
+import styled from 'styled-components'
+
+const Title = styled.h1.attrs({
+    className: 'h1',
+})``
+
+const Wrapper = styled.div.attrs({
+    className: 'form-group',
+})`
+    margin: 0 30px;
+`
+
+const Label = styled.label`
+    margin: 5px;
+`
+
+const InputText = styled.input.attrs({
+    className: 'form-control',
+})`
+    margin: 5px;
+`
+
+const Button = styled.button.attrs({
+    className: `btn btn-primary`,
+})`
+    margin: 15px 15px 15px 5px;
+`
+
+const CancelButton = styled.a.attrs({
+    className: `btn btn-danger`,
+})`
+    margin: 15px 15px 15px 5px;
+`
+
+class MovieInsert extends Component {
+
+    constructor(props){
+        super(props);
+        this.state = {
+            name: '',
+            rating: '',
+            time: '',
+        }
+    }
+
+    handleChangeInputName = async event => {
+        const name = event.target.value
+        this.setState({ name })
+    }
+
+    handleChangeInputRating = async event => {
+        const rating = event.target.validity.valid
+            ? event.target.value
+            : this.state.rating
+
+        this.setState({ rating })
+    }
+
+    handleChangeInputTime = async event => {
+        const time = event.target.value
+        this.setState({ time })
+    }
+
+    handleAddMovie = async () => {
+        const { name, rating, time } = this.state
+        const arrayTime = time.split('/')
+        const payload = { name, rating, time: arrayTime }
+
+        await api.insertMovie(payload).then(res => {
+            window.alert(`Movie inserted successfully`)
+            this.setState({
+                name: '',
+                rating: '',
+                time: '',
+            })
+        })
+    }
+
+    render() {
+        
+        const { name, rating, time } = this.state
+
+        return (
+            <Wrapper>
+                <Title>Create a Movie</Title>
+                <Label>Name: </Label>
+                <InputText 
+                    type="text" 
+                    value={name} 
+                    onChange={this.handleChangeInputName} 
+                />
+
+                <Label>Rating: </Label>
+                <InputText
+                    type="number"
+                    step="0.1"
+                    lang="en-US"
+                    min="0"
+                    max="10"
+                    pattern="[0-9]+([,\.][0-9]+)?"
+                    value={rating}
+                    onChange={this.handleChangeInputRating}
+                />
+
+                <Label>Time: </Label>
+                <InputText
+                    type="text"
+                    value={time}
+                    onChange={this.handleChangeInputTime}
+                />
+
+                <Button onClick={this.handleAddMovie}>Add Movie</Button>
+                <CancelButton href={'/movies/list'}>Cancel</CancelButton>
+            </Wrapper>
+        )
+    }
+}
+
+export default MovieInsert
+```
 
