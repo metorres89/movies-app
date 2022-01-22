@@ -1,12 +1,12 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
-
 const db = require('./db')
 const movieRouter = require('./routes/movie-router')
-
 const app = express()
-const apiPort = 3000
+const config = require('./config')
+
+const apiPort = config.env.API_PORT
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
