@@ -1,0 +1,31 @@
+version: "3"
+services:
+  react-app:
+    image: movies-front:release
+    stdin_open: true
+    ports: 
+      - "8001:80"
+    networks:
+      - mern-app
+  api-server:
+    image: movies-back:release
+    ports:
+      - "8002:3000"
+    networks:
+      - mern-app
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo:3.6.19-xenial
+    ports:
+      - "27017:27017"
+    networks:
+      - mern-app
+    volumes:
+      - mongo-data:/var/lib/mongodb
+networks:
+  mern-app:
+    driver: bridge
+volumes:
+  mongo-data:
+    driver: local

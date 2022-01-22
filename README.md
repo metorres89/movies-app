@@ -893,3 +893,11 @@ function MovieUpdate() {
 export default MovieUpdate
 
 ```
+
+# Docker and Docker compose
+
+1. Added Dockerfiles to /client/ and /sever/.
+   1. Docker image generated from /client/ is building the React JS for release and using nginx to serve the files.
+   2. Docker image generated from /server/ is installing all dependencies from the server project in a release manner and executing the /server/index.js with Node and with PRODUCTION environment name (this apparrently make some performance improvements in express js).
+2. MongoDB is being executed using a default MongoDB image from dockerhub.
+3. I had to add extra file /client/config/nginx/nginx.conf due to a React Router problem when serving static files from nginx server. The /update/ routes which include the ':id' argument had problems resolving. The conf file was taken from [here](https://www.barrydobson.com/post/react-router-nginx/)
