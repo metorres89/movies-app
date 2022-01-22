@@ -901,3 +901,26 @@ export default MovieUpdate
    2. Docker image generated from /server/ is installing all dependencies from the server project in a release manner and executing the /server/index.js with Node and with PRODUCTION environment name (this apparrently make some performance improvements in express js).
 2. MongoDB is being executed using a default MongoDB image from dockerhub.
 3. I had to add extra file /client/config/nginx/nginx.conf due to a React Router problem when serving static files from nginx server. The /update/ routes which include the ':id' argument had problems resolving. The conf file was taken from [here](https://www.barrydobson.com/post/react-router-nginx/)
+
+```conf
+server {
+  listen       80;
+  location / {
+    root   /usr/share/nginx/html;
+    index  index.html index.htm;
+    try_files $uri $uri/ /index.html =404;
+  }
+}
+```
+
+## nginx settings explained
+
+[Source 1](https://docs.nginx.com/nginx/admin-guide/web-server/web-server/?_bt=573371260721&_bk=&_bm=&_bn=g&_bg=134448917200&gclid=CjwKCAiA0KmPBhBqEiwAJqKK49ly1RlQSMt2rwLuTL51ai9UVHMEgS4kpoRgSznk0Yyv_PBgXLlbphoCkEgQAvD_BwE)
+
+[Source 2](https://docs.nginx.com/nginx/admin-guide/web-server/serving-static-content/)
+
+* **listen**: tells the server to listen to port 80.
+* **location /**: tells the server that every location starting with '/' (url root) will have the settings enclosed by {}.
+* **root**: tells that every url location stating with '/' will be served a file from the static files folder which in this case is the default /usr/share/nginx/html.
+* **index**: tells the server other possible names for the index file.
+* **try_files**: tells the server to check whether the specified file or directory exists. First it starts with $uri then tries with the original uri with / at the end, then /index.html and if none of the previous exists then it returns 404.
