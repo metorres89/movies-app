@@ -20,7 +20,7 @@ const TimeList = styled.ul`
     list-style-type: none;
 `
 
-export default function MovieList() {
+export default function BasicTable() {
 
   const [rows, setRows] = React.useState([])
   const [reloadCounter, setReloadCounter] = React.useState(0)
@@ -32,7 +32,7 @@ export default function MovieList() {
   const handleDelete = async function(row, event){
     if (window.confirm(`Do tou want to delete the movie ${row._id} permanently?`)) {
         await api.deleteMovieById(row._id);
-        setReloadCounter( (reloadCounter + 1) % 2 );
+        setReloadCounter(reloadCounter + 1);
     }    
   }
 
