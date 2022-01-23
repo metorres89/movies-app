@@ -10,20 +10,52 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
 
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+import { Delete as DeleteIcon, Edit as EditIcon, Add as AddIcon } from '@mui/icons-material';
+
+import { Box, Modal } from '@mui/material';
+
+import MovieInsert from './MovieInsert';
 
 import styled from 'styled-components'
 import api from '../api';
 
-const TimeList = styled.ul`
-    list-style-type: none;
-`
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+
+function MovieInsertModal(props) {
+  
+  const onCancel = function() {
+    props.setClose();
+  }
+  
+  const onInsert = function() {
+    props.onInsert();
+  }
+
+  return (
+    <Modal open={props.openState()}>
+      <Box sx={style}>
+        <MovieInsert onCancel={onCancel} onInsert={onInsert}></MovieInsert>
+      </Box>
+    </Modal>
+  )
+}
 
 export default function MovieList() {
 
   const [rows, setRows] = React.useState([])
   const [reloadCounter, setReloadCounter] = React.useState(0)
+
+  const [showInsertModal, setShowInsertModal] = React.useState(false);
 
   const handleEdit = function(row, event){
     window.location.href = `/movies/update/${row._id}`;
@@ -32,8 +64,22 @@ export default function MovieList() {
   const handleDelete = async function(row, event){
     if (window.confirm(`Do tou want to delete the movie ${row._id} permanently?`)) {
         await api.deleteMovieById(row._id);
-        setReloadCounter( (reloadCounter + 1) % 2 );
+        reloadTable();
     }    
+  }
+
+  const handleAdd = function() {
+    console.log(`handleAdd:${showInsertModal}`);
+    setShowInsertModal(true);
+  }
+
+  const getInsertModalState = function() {
+    console.log(`showInsertModal:${showInsertModal}`);
+    return showInsertModal;
+  }
+
+  const reloadTable = function() {
+    setReloadCounter( (reloadCounter + 1) % 2 );
   }
 
   React.useEffect( async() => {
@@ -64,7 +110,7 @@ export default function MovieList() {
               <TableCell component="th" scope="row">{row._id}</TableCell>
               <TableCell align="left">{row.name}</TableCell>
               <TableCell align="right">{row.rating}</TableCell>
-              <TableCell align="right"><TimeList>{row.time.join(' - ')}</TimeList></TableCell>
+              <TableCell align="right">{row.time.join(' - ')}</TableCell>
               <TableCell align="center">  
                 <Stack spacing={2} direction="row">
                   <IconButton aria-label="Edit" onClick={ (e) => handleEdit(row, e) }>
@@ -79,6 +125,13 @@ export default function MovieList() {
           ))}
         </TableBody>
       </Table>
+      <IconButton aria-label="delete" onClick={handleAdd}>
+        <AddIcon />
+      </IconButton>
+      <MovieInsertModal openState={getInsertModalState} setClose={() => setShowInsertModal(false)} onInsert={ () => {
+        reloadTable();
+        setShowInsertModal(false);
+      }}></MovieInsertModal>
     </TableContainer>
   );
 }

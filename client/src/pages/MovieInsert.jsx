@@ -39,10 +39,13 @@ class MovieInsert extends Component {
 
     constructor(props){
         super(props);
+
         this.state = {
             name: '',
             rating: '',
             time: '',
+            onCancel: props.onCancel,
+            onInsert: props.onInsert,
         }
     }
 
@@ -70,13 +73,19 @@ class MovieInsert extends Component {
         const payload = { name, rating, time: arrayTime }
 
         await api.insertMovie(payload).then(res => {
-            window.alert(`Movie inserted successfully`)
             this.setState({
                 name: '',
                 rating: '',
                 time: '',
             })
+            const { onInsert } = this.state;
+            if(onInsert) onInsert();
         })
+    }
+
+    handleCancel = async event => {
+        const { onCancel } = this.state;
+        if(onCancel) onCancel();
     }
 
     render() {
@@ -113,7 +122,7 @@ class MovieInsert extends Component {
                 />
 
                 <Button onClick={this.handleAddMovie}>Add Movie</Button>
-                <CancelButton href={'/movies/list'}>Cancel</CancelButton>
+                <CancelButton onClick={this.handleCancel}>Cancel</CancelButton>
             </Wrapper>
         )
     }
