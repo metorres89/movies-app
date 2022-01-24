@@ -1,40 +1,30 @@
 import * as React from 'react';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material/'
 import Paper from '@mui/material/Paper';
-
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
-
 import { Delete as DeleteIcon, Edit as EditIcon, Add as AddIcon } from '@mui/icons-material';
-
 import { Box, Modal } from '@mui/material';
 
 import MovieInsert from './MovieInsert';
-
-import styled from 'styled-components'
 import api from '../api';
-
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
 
 function MovieInsertModal(props) {
   
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '0px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
+
   const onCancel = function() {
-    props.setClose();
+    props.onCancel();
   }
   
   const onInsert = function() {
@@ -42,9 +32,12 @@ function MovieInsertModal(props) {
   }
 
   return (
-    <Modal open={props.openState()}>
+    <Modal open={props.isOpen()}>
       <Box sx={style}>
-        <MovieInsert onCancel={onCancel} onInsert={onInsert}></MovieInsert>
+        <MovieInsert 
+          onCancel={onCancel} 
+          onInsert={onInsert}
+        />
       </Box>
     </Modal>
   )
@@ -128,10 +121,13 @@ export default function MovieList() {
       <IconButton aria-label="delete" onClick={handleAdd}>
         <AddIcon />
       </IconButton>
-      <MovieInsertModal openState={getInsertModalState} setClose={() => setShowInsertModal(false)} onInsert={ () => {
-        reloadTable();
-        setShowInsertModal(false);
-      }}></MovieInsertModal>
+      <MovieInsertModal 
+        isOpen={getInsertModalState} 
+        onCancel={() => setShowInsertModal(false)} 
+        onInsert={() => {
+          reloadTable();
+          setShowInsertModal(false);
+      }}/>
     </TableContainer>
   );
 }
