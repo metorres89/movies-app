@@ -10,9 +10,6 @@ function App() {
         <NavBar />
         <Routes>
           <Route path="/movies/list" element={<MovieList></MovieList>}/>
-          <Route path="/movies/list2" element={<BasicTable></BasicTable>}/>
-          <Route path="/movies/create" element={<MovieInsert></MovieInsert>}/>
-          <Route path="/movies/update/:id" element={<MovieUpdate></MovieUpdate>}/> 
         </Routes>
     </Router>
   );

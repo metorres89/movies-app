@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useParams } from "react-router-dom"
-
 import api from '../api'
-
 import styled from 'styled-components'
 
 const Title = styled.h1.attrs({
@@ -36,11 +33,8 @@ const CancelButton = styled.a.attrs({
 })`
     margin: 15px 15px 15px 5px;
 `
-function MovieUpdate() {
-
-    let params = useParams();
-    
-    const [id, setId] = useState(params.id)
+function MovieUpdate(props) {
+    const [id, setId] = useState(props.actionId)
     const [name, setName] = useState('')
     const [rating, setRating] = useState(0)
     const [time, setTime] = useState('')
@@ -51,11 +45,11 @@ function MovieUpdate() {
     }
 
     const handleChangeInputRating = async event => {
-        const rating = event.target.validity.valid
+        const newRating = event.target.validity.valid
             ? event.target.value
             : rating
 
-        setRating(rating);
+        setRating(newRating);
     }
 
     const handleChangeInputTime = async event => {
@@ -68,10 +62,17 @@ function MovieUpdate() {
         const payload = { name, rating, time: arrayTime }
 
         await api.updateMovieById(id, payload).then(res => {
-            window.alert(`Movie updated successfully`)
+            console.log(`Movie updated successfully`)
+            if(props.onUpdate)
+                props.onUpdate()
         })
     }
     
+    const handleCancel = async () => {
+        if(props.onCancel)
+            props.onCancel()
+    }
+
     useEffect(() => {
         const movie = api.getMovieById(id).then(response => {
             setName(response.data.data.name)
@@ -111,11 +112,9 @@ function MovieUpdate() {
             />
 
             <Button onClick={handleUpdateMovie}>Update Movie</Button>
-            <CancelButton href={'/movies/list'}>Cancel</CancelButton>
+            <CancelButton onClick={handleCancel}>Cancel</CancelButton>
         </Wrapper>
     )
 }
-
-
 
 export default MovieUpdate
