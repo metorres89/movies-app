@@ -1,26 +1,12 @@
 import React, { useState } from 'react'
 import api from '../api'
-import { Button } from '@mui/material'
+import { Button, TextField } from '@mui/material'
 import styled from 'styled-components'
 
-const Title = styled.h1.attrs({
-    className: 'h1',
-})``
-
 const Wrapper = styled.div.attrs({
-    className: 'form-group',
+    className: 'flex-container-col',
 })`
-    margin: 0 30px;
-`
-
-const Label = styled.label`
-    margin: 5px;
-`
-
-const InputText = styled.input.attrs({
-    className: 'form-control',
-})`
-    margin: 5px;
+    min-height: 400px;
 `
 
 export default function MovieInsert(props) {
@@ -71,19 +57,28 @@ export default function MovieInsert(props) {
         if(onCancel) onCancel();
     }
 
+    const buttonContainer = {
+        width: 300
+    };
+
     return (
         <Wrapper>
-            <Title>Create a Movie</Title>
-            <Label>Name: </Label>
-            <InputText 
-                type="text" 
+            <h2>Create a Movie</h2>
+            
+            <TextField 
+                id="movieName" 
+                label="Name" 
+                variant="filled" 
                 name="name"
                 value={getState.name} 
                 onChange={handleInputChange} 
             />
 
-            <Label>Rating: </Label>
-            <InputText
+            <TextField 
+                id="movieRating" 
+                label="Rating" 
+                variant="filled" 
+                name="rating"
                 type="number"
                 step="0.1"
                 lang="en-US"
@@ -94,14 +89,16 @@ export default function MovieInsert(props) {
                 onChange={handleChangeInputRating}
             />
 
-            <Label>Time: </Label>
-            <InputText
-                type="text"
+            <TextField 
+                id="movieTime" 
+                label="Time" 
+                variant="filled" 
                 name="time"
                 value={getState.time}
                 onChange={handleInputChange}
             />
-            <div class="flex-container-row">
+
+            <div class="flex-container-row" style={buttonContainer}>
                 <Button variant="contained" onClick={handleAddMovie}>Add Movie</Button>
                 <Button variant="contained" color="secondary" onClick={handleCancel}>Cancel</Button>
             </div>
