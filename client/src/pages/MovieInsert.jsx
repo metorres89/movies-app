@@ -27,12 +27,12 @@ export default function MovieInsert(props) {
     }
 
     const handleChangeInputRating = async event => {
-        const rating = event.target.validity.valid
+        const newRating = event.target.validity.valid
             ? event.target.value
             : getState.rating
 
         setState( prevValues => {
-            return {...prevValues, rating: rating }
+            return {...prevValues, rating: newRating }
         })
     }
 
@@ -98,8 +98,8 @@ export default function MovieInsert(props) {
                 onChange={handleInputChange}
             />
 
-            <div class="flex-container-row" style={buttonContainer}>
-                <Button variant="contained" onClick={handleAddMovie}>Add Movie</Button>
+            <div className="flex-container-row" style={buttonContainer}>
+                <Button variant="contained" onClick={handleAddMovie}>Add</Button>
                 <Button variant="contained" color="secondary" onClick={handleCancel}>Cancel</Button>
             </div>
         </Wrapper>

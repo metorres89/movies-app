@@ -1,16 +1,27 @@
 import * as React from 'react';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material/'
 import Paper from '@mui/material/Paper';
-import Container from '@mui/material/Container'
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import { Delete as DeleteIcon, Edit as EditIcon, Add as AddIcon } from '@mui/icons-material';
 import { Box, Modal } from '@mui/material';
 
+import styled from 'styled-components'
+
 import MovieInsert from './MovieInsert';
 import MovieUpdate from './MovieUpdate';
 import api from '../api';
+
+const Wrapper = styled.div.attrs({
+  className: 'flex-container-col',
+})`
+  height: 100%;
+  width: 90%;
+  padding-left:5%;
+  padding-right:5%;
+  box-sizing:none;
+`
 
 function ActionModal(props) {
   
@@ -79,7 +90,7 @@ export default function MovieList() {
   }, [reloadCounter]);
 
   return (
-    <Container maxWidth="lg">
+    <Wrapper>
       <TableContainer component={Paper}>
         <Table aria-label="simple table">
           <TableHead>
@@ -151,6 +162,6 @@ export default function MovieList() {
             />
           )}
         />
-    </Container>
+    </Wrapper>
   );
 }
