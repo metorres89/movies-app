@@ -14,25 +14,21 @@ const Item = styled.div.attrs({
     className: 'collpase navbar-collapse',
 })``
 
-class Links extends Component {
-    render() {
-        return (
-            <React.Fragment>
-                <Link to="/" className="navbar-brand">
-                    My first MERN Application
-                </Link>
-                <Collapse>
-                    <List>
-                        <Item>
-                            <Link to="/movies/list" className="nav-link">
-                                Movies
-                            </Link>
-                        </Item>
-                    </List>
-                </Collapse>
-            </React.Fragment>
-        )
-    }
+export default function Links() {
+    return (
+        <React.Fragment>
+            <Link to="/" className="navbar-brand">
+                My first MERN Application
+            </Link>
+            <Collapse>
+                <List>
+                    <Item>
+                        <Link to="/movies/list" className="nav-link">
+                            Movies
+                        </Link>
+                    </Item>
+                </List>
+            </Collapse>
+        </React.Fragment>
+    )
 }
-
-export default Links
