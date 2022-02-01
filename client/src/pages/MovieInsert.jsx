@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import api from '../api'
-
+import { Button } from '@mui/material'
 import styled from 'styled-components'
 
 const Title = styled.h1.attrs({
@@ -21,18 +21,6 @@ const InputText = styled.input.attrs({
     className: 'form-control',
 })`
     margin: 5px;
-`
-
-const Button = styled.button.attrs({
-    className: `btn btn-primary`,
-})`
-    margin: 15px 15px 15px 5px;
-`
-
-const CancelButton = styled.a.attrs({
-    className: `btn btn-danger`,
-})`
-    margin: 15px 15px 15px 5px;
 `
 
 export default function MovieInsert(props) {
@@ -113,9 +101,10 @@ export default function MovieInsert(props) {
                 value={getState.time}
                 onChange={handleInputChange}
             />
-
-            <Button onClick={handleAddMovie}>Add Movie</Button>
-            <CancelButton onClick={handleCancel}>Cancel</CancelButton>
+            <div class="flex-container-row">
+                <Button variant="contained" onClick={handleAddMovie}>Add Movie</Button>
+                <Button variant="contained" color="secondary" onClick={handleCancel}>Cancel</Button>
+            </div>
         </Wrapper>
     )
 }
