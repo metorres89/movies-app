@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import api from '../api'
 
 import styled from 'styled-components'
@@ -35,96 +35,87 @@ const CancelButton = styled.a.attrs({
     margin: 15px 15px 15px 5px;
 `
 
-class MovieInsert extends Component {
-    constructor(props){
-        super(props);
+export default function MovieInsert(props) {
 
-        this.state = {
-            name: '',
-            rating: '',
-            time: '',
-            onCancel: props.onCancel,
-            onInsert: props.onInsert,
-        }
+    const [getState, setState] = useState({
+        name: '',
+        rating: '',
+        time: '',
+        onCancel: props.onCancel,
+        onInsert: props.onInsert,
+    })
+
+    const handleInputChange = event => {
+        //setState({...getState, [event.target.name]: event.target.value})
+        setState( prevValues => {
+            return {...prevValues, [event.target.name]: event.target.value }
+        })
     }
 
-    handleChangeInputName = async event => {
-        const name = event.target.value
-        this.setState({ name })
-    }
-
-    handleChangeInputRating = async event => {
+    const handleChangeInputRating = async event => {
         const rating = event.target.validity.valid
             ? event.target.value
-            : this.state.rating
+            : getState.rating
 
-        this.setState({ rating })
+        setState( prevValues => {
+            return {...prevValues, rating: rating }
+        })
     }
 
-    handleChangeInputTime = async event => {
-        const time = event.target.value
-        this.setState({ time })
-    }
-
-    handleAddMovie = async () => {
-        const { name, rating, time } = this.state
+    const handleAddMovie = async () => {
+        const { name, rating, time } = getState
         const arrayTime = time.split('/')
         const payload = { name, rating, time: arrayTime }
 
         await api.insertMovie(payload).then(res => {
-            this.setState({
+            setState({
                 name: '',
                 rating: '',
                 time: '',
             })
-            const { onInsert } = this.state;
+            const { onInsert } = getState;
             if(onInsert) onInsert();
         })
     }
 
-    handleCancel = async event => {
-        const { onCancel } = this.state;
+    const handleCancel = async event => {
+        const { onCancel } = getState;
         if(onCancel) onCancel();
     }
 
-    render() {
-        
-        const { name, rating, time } = this.state
+    return (
+        <Wrapper>
+            <Title>Create a Movie</Title>
+            <Label>Name: </Label>
+            <InputText 
+                type="text" 
+                name="name"
+                value={getState.name} 
+                onChange={handleInputChange} 
+            />
 
-        return (
-            <Wrapper>
-                <Title>Create a Movie</Title>
-                <Label>Name: </Label>
-                <InputText 
-                    type="text" 
-                    value={name} 
-                    onChange={this.handleChangeInputName} 
-                />
+            <Label>Rating: </Label>
+            <InputText
+                type="number"
+                step="0.1"
+                lang="en-US"
+                min="0"
+                max="10"
+                pattern="[0-9]+([,\.][0-9]+)?"
+                value={getState.rating}
+                onChange={handleChangeInputRating}
+            />
 
-                <Label>Rating: </Label>
-                <InputText
-                    type="number"
-                    step="0.1"
-                    lang="en-US"
-                    min="0"
-                    max="10"
-                    pattern="[0-9]+([,\.][0-9]+)?"
-                    value={rating}
-                    onChange={this.handleChangeInputRating}
-                />
+            <Label>Time: </Label>
+            <InputText
+                type="text"
+                name="time"
+                value={getState.time}
+                onChange={handleInputChange}
+            />
 
-                <Label>Time: </Label>
-                <InputText
-                    type="text"
-                    value={time}
-                    onChange={this.handleChangeInputTime}
-                />
-
-                <Button onClick={this.handleAddMovie}>Add Movie</Button>
-                <CancelButton onClick={this.handleCancel}>Cancel</CancelButton>
-            </Wrapper>
-        )
-    }
+            <Button onClick={handleAddMovie}>Add Movie</Button>
+            <CancelButton onClick={handleCancel}>Cancel</CancelButton>
+        </Wrapper>
+    )
 }
-
-export default MovieInsert
