@@ -33,7 +33,7 @@ function ActionModal(props) {
     width: 400,
     bgcolor: 'background.paper',
     border: '0px solid #000',
-    borderRadius: 8,
+    borderRadius: 2,
     boxShadow: 24,
     p: 4,
   };
