@@ -1,166 +1,167 @@
-import React, { Component } from 'react'
-import { useTable } from 'react-table'
-import api from '../api'
+import * as React from 'react';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material/'
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import { Delete as DeleteIcon, Edit as EditIcon, Add as AddIcon } from '@mui/icons-material';
+import { Box, Modal } from '@mui/material';
+
 import styled from 'styled-components'
-//import 'react-table/react-table.css'
 
-const Wrapper = styled.div`
-    padding:0 40px 40px;
-`
-const Delete = styled.div`
-    color: #ff0000;
-    cursor: pointer;
-`
-const Update = styled.div`
-    color: #ef9b0f;
-    cursor: pointer;
+import MovieInsert from './MovieInsert';
+import MovieUpdate from './MovieUpdate';
+import api from '../api';
+
+const Wrapper = styled.div.attrs({
+  className: 'flex-container-col',
+})`
+  height: 100%;
+  width: 90%;
+  padding-left:5%;
+  padding-right:5%;
+  box-sizing:none;
 `
 
-function Table({columns, data}) {
-    // Use the state and functions returned from useTable to build your UI
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-  } = useTable({
-    columns,
-    data,
-  })
+function ActionModal(props) {
+  
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '0px solid #000',
+    borderRadius: 2,
+    boxShadow: 24,
+    p: 4,
+  };
 
-  // Render the UI for your table
   return (
-    <table {...getTableProps()}>
-      <thead>
-        {headerGroups.map(headerGroup => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-            {headerGroup.headers.map(column => (
-              <th {...column.getHeaderProps()}>{column.render('Header')}</th>
-            ))}
-          </tr>
-        ))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-        {rows.map((row, i) => {
-          prepareRow(row)
-          return (
-            <tr {...row.getRowProps()}>
-              {row.cells.map(cell => {
-                return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-              })}
-            </tr>
-          )
-        })}
-      </tbody>
-    </table>
+    <Modal open={props.isOpen()}>
+      <Box sx={style}>
+        {props.renderActionPage()}
+      </Box>
+    </Modal>
   )
 }
 
-class DeleteMovie extends Component {
-    deleteUser = event => {
-        event.preventDefault()
+export default function MovieList() {
 
-        if (
-            window.confirm(
-                `Do tou want to delete the movie ${this.props.id} permanently?`,
-            )
-        ) {
-            api.deleteMovieById(this.props.id)
-            window.location.reload()
-        }
-    }
+  const [rows, setRows] = React.useState([])
+  const [reloadCounter, setReloadCounter] = React.useState(0)
+  const [showInsertModal, setShowInsertModal] = React.useState(false);
+  const [showUpdateModal, setShowUpdateModal] = React.useState(false);
+  const [actionId, setActionId] = React.useState('');
 
-    render() {
-        return <Delete onClick={this.deleteUser}>Delete</Delete>
-    }
-}
+  const getInsertModalState = function() { return showInsertModal }
+  const getUpdateModalState = function() { return showUpdateModal }
 
-class UpdateMovie extends Component {
-  updateUser = event => {
-      event.preventDefault()
-
-      window.location.href = `/movies/update/${this.props.id}`
+  const handleEdit = function(row, event){
+    setActionId(row._id)
+    setShowUpdateModal(true)
   }
 
-  render() {
-      return <Update onClick={this.updateUser}>Update</Update>
+  const handleDelete = async function(row, event){
+    if (window.confirm(`Do tou want to delete the movie ${row._id} permanently?`)) {
+        await api.deleteMovieById(row._id);
+        reloadTable();
+    }    
   }
+
+  const handleAdd = function() {
+    console.log(`handleAdd:${showInsertModal}`);
+    setShowInsertModal(true);
+  }
+
+  const reloadTable = function() {
+    setReloadCounter( (reloadCounter + 1) % 2 );
+  }
+
+  React.useEffect( () => {
+    async function fetchData(){
+      await api.getAllMovies().then(response => {
+          console.log(response.data.data);
+          setRows(response.data.data)
+      });
+    }
+    fetchData();
+  }, [reloadCounter]);
+
+  return (
+    <Wrapper>
+      <TableContainer component={Paper}>
+        <Table aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell>ID</TableCell>
+              <TableCell align="right">Name</TableCell>
+              <TableCell align="right">Rating</TableCell>
+              <TableCell align="right">Time</TableCell>
+              <TableCell align="center">Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows.map((row) => (
+              <TableRow
+                key={row._id}
+                sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+              >
+                <TableCell component="th" scope="row">{row._id}</TableCell>
+                <TableCell align="left">{row.name}</TableCell>
+                <TableCell align="right">{row.rating}</TableCell>
+                <TableCell align="right">{row.time.join(' - ')}</TableCell>
+                <TableCell align="center">  
+                  <Stack spacing={2} direction="row">
+                    <IconButton aria-label="Edit" onClick={ (e) => handleEdit(row, e) }>
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton aria-label="delete" onClick={ (e) => handleDelete(row, e) }>
+                      <DeleteIcon />
+                    </IconButton>
+                  </Stack>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+      <Button 
+        variant="outlined" 
+        startIcon={<AddIcon />}  
+        onClick={handleAdd}
+      >
+        Add Movie
+      </Button>
+
+        <ActionModal
+          isOpen={getInsertModalState} 
+          renderActionPage={ () => (
+            <MovieInsert 
+              onCancel={() => setShowInsertModal(false)} 
+              onInsert={() => {
+                reloadTable();
+                setShowInsertModal(false);
+              }}
+            />
+          )}
+        />
+
+        <ActionModal
+          isOpen={getUpdateModalState} 
+          renderActionPage={ () => (
+            <MovieUpdate 
+              actionId={actionId}
+              onCancel={() => setShowUpdateModal(false)} 
+              onUpdate={() => {
+                reloadTable();
+                setShowUpdateModal(false);
+              }}
+            />
+          )}
+        />
+    </Wrapper>
+  );
 }
-
-class MovieList extends Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            movies: [],
-            columns: [],
-            isLoading: false,
-        }
-    }
-
-    componentDidMount = async () => {
-        this.setState({isLoading:true});
-
-        await api.getAllMovies().then(response => {
-            console.log(response.data.data);
-            this.setState({
-                movies: response.data.data, 
-                isLoading:false
-            });
-        });
-    }
-
-    render() {
-        const { movies, isLoading } = this.state
-        console.log('TCL: MovieList -> render -> movies', movies)
-
-        const columns = [
-            {
-                Header: 'ID',
-                accessor: '_id',
-                filterable: true,
-            },
-            {
-                Header: 'Name',
-                accessor: 'name',
-                filterable: true,
-            },
-            {
-                Header: 'Rating',
-                accessor: 'rating',
-                filterable: true,
-            },
-            {
-                Header: 'Time',
-                accessor: 'time',
-                Cell: props => <span>{props.value.join(' / ')}</span>,
-            },
-            {
-                Header: 'Actions',
-                Cell: function(props) {
-                    const id = props.cell.row.original._id;
-                    return (
-                        <span>
-                            <DeleteMovie id={id} />
-                            <UpdateMovie id={id} />
-                        </span>
-                    )
-                },
-            },
-        ]
-
-        let showTable = true
-        if (!movies.length) {
-            showTable = false
-        }
-
-        return (
-            <Wrapper>
-                <Table columns={columns} data={movies} />
-            </Wrapper>
-        )
-    }
-}
-
-export default MovieList

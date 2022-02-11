@@ -1,11 +1,10 @@
 const mongoose = require('mongoose')
 const config = require('../config')
 
-const domain = config.env.MONGO_DB_DOMAIN
-const port = config.env.MONGO_DB_PORT
+const connectionString = config.env.MONGO_DB_CONNECTION_STRING
 
 mongoose
-    .connect(`mongodb://${domain}:${port}/cinema`, { useNewUrlParser: true })
+    .connect(connectionString, { useNewUrlParser: true })
     .catch(e => {
         console.error('Connection error', e.message)
     })

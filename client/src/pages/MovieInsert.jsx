@@ -1,122 +1,107 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import api from '../api'
-
+import { Button, TextField } from '@mui/material'
 import styled from 'styled-components'
 
-const Title = styled.h1.attrs({
-    className: 'h1',
-})``
-
 const Wrapper = styled.div.attrs({
-    className: 'form-group',
+    className: 'flex-container-col',
 })`
-    margin: 0 30px;
+    min-height: 400px;
 `
 
-const Label = styled.label`
-    margin: 5px;
-`
+export default function MovieInsert(props) {
 
-const InputText = styled.input.attrs({
-    className: 'form-control',
-})`
-    margin: 5px;
-`
+    const [getState, setState] = useState({
+        name: '',
+        rating: '',
+        time: '',
+        onCancel: props.onCancel,
+        onInsert: props.onInsert,
+    })
 
-const Button = styled.button.attrs({
-    className: `btn btn-primary`,
-})`
-    margin: 15px 15px 15px 5px;
-`
-
-const CancelButton = styled.a.attrs({
-    className: `btn btn-danger`,
-})`
-    margin: 15px 15px 15px 5px;
-`
-
-class MovieInsert extends Component {
-
-    constructor(props){
-        super(props);
-        this.state = {
-            name: '',
-            rating: '',
-            time: '',
-        }
+    const handleInputChange = event => {
+        //setState({...getState, [event.target.name]: event.target.value})
+        setState( prevValues => {
+            return {...prevValues, [event.target.name]: event.target.value }
+        })
     }
 
-    handleChangeInputName = async event => {
-        const name = event.target.value
-        this.setState({ name })
-    }
-
-    handleChangeInputRating = async event => {
-        const rating = event.target.validity.valid
+    const handleChangeInputRating = async event => {
+        const newRating = event.target.validity.valid
             ? event.target.value
-            : this.state.rating
+            : getState.rating
 
-        this.setState({ rating })
+        setState( prevValues => {
+            return {...prevValues, rating: newRating }
+        })
     }
 
-    handleChangeInputTime = async event => {
-        const time = event.target.value
-        this.setState({ time })
-    }
-
-    handleAddMovie = async () => {
-        const { name, rating, time } = this.state
+    const handleAddMovie = async () => {
+        const { name, rating, time } = getState
         const arrayTime = time.split('/')
         const payload = { name, rating, time: arrayTime }
 
         await api.insertMovie(payload).then(res => {
-            window.alert(`Movie inserted successfully`)
-            this.setState({
+            setState({
                 name: '',
                 rating: '',
                 time: '',
             })
+            const { onInsert } = getState;
+            if(onInsert) onInsert();
         })
     }
 
-    render() {
-        
-        const { name, rating, time } = this.state
-
-        return (
-            <Wrapper>
-                <Title>Create a Movie</Title>
-                <Label>Name: </Label>
-                <InputText 
-                    type="text" 
-                    value={name} 
-                    onChange={this.handleChangeInputName} 
-                />
-
-                <Label>Rating: </Label>
-                <InputText
-                    type="number"
-                    step="0.1"
-                    lang="en-US"
-                    min="0"
-                    max="10"
-                    pattern="[0-9]+([,\.][0-9]+)?"
-                    value={rating}
-                    onChange={this.handleChangeInputRating}
-                />
-
-                <Label>Time: </Label>
-                <InputText
-                    type="text"
-                    value={time}
-                    onChange={this.handleChangeInputTime}
-                />
-
-                <Button onClick={this.handleAddMovie}>Add Movie</Button>
-                <CancelButton href={'/movies/list'}>Cancel</CancelButton>
-            </Wrapper>
-        )
+    const handleCancel = async event => {
+        const { onCancel } = getState;
+        if(onCancel) onCancel();
     }
-}
 
-export default MovieInsert
+    const buttonContainer = {
+        width: 300
+    };
+
+    return (
+        <Wrapper>
+            <h2>Create a Movie</h2>
+            
+            <TextField 
+                id="movieName" 
+                label="Name" 
+                variant="filled" 
+                name="name"
+                value={getState.name} 
+                onChange={handleInputChange} 
+            />
+
+            <TextField 
+                id="movieRating" 
+                label="Rating" 
+                variant="filled" 
+                name="rating"
+                type="number"
+                step="0.1"
+                lang="en-US"
+                min="0"
+                max="10"
+                pattern="[0-9]+([,\.][0-9]+)?"
+                value={getState.rating}
+                onChange={handleChangeInputRating}
+            />
+
+            <TextField 
+                id="movieTime" 
+                label="Time" 
+                variant="filled" 
+                name="time"
+                value={getState.time}
+                onChange={handleInputChange}
+            />
+
+            <div className="flex-container-row" style={buttonContainer}>
+                <Button variant="contained" onClick={handleAddMovie}>Add</Button>
+                <Button variant="contained" color="secondary" onClick={handleCancel}>Cancel</Button>
+            </div>
+        </Wrapper>
+    )
+}
