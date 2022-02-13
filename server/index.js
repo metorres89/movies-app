@@ -2,7 +2,6 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const db = require('./db')
-const movieRouter = require('./routes/movie-router')
 const movieRouter2 = require('./routes/movie-router-2')
 const app = express()
 const config = require('./config')
@@ -38,7 +37,6 @@ app.get('/', (req, res) => {
     res.send('Hello Worlds!')
 })
 
-app.use('/api/v1', movieRouter)
 app.use('/api/v2', (req, res) => { container.resolve('MovieRouter')(req, res) } )
 
 app.listen(apiPort, () => console.log(`Server running on port ${apiPort}`))
