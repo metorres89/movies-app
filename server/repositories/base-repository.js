@@ -3,9 +3,9 @@ class BaseRepository {
         this.model = model;
     }
 
-    /* async getById(id) {
-        return await this.model.findById(id);
-    } */
+    async getById(id) {
+        return await this.model.findById({ _id: id });
+    }
 
     async getAll() {
         return await this.model.find();
