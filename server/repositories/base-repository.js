@@ -11,17 +11,17 @@ class BaseRepository {
         return await this.model.find();
     }
     
-    /* async create(entity) {
+    async create(entity) {
         return await this.model.create(entity);
     }
 
-    update(id, entity) {
-        return this.model.findByIdAndUpdate(id, entity, { new: true});
+    async update(id, entity) {
+        return await this.model.findByIdAndUpdate(id, entity, { new: true});
     }
     
-    delete(id) {
-        return this.model.findByIdAndDelete(id);
-    } */
+    async delete(id) {
+        return await this.model.findOneAndDelete({ _id: id });
+    }
 }
 
 module.exports = BaseRepository;
