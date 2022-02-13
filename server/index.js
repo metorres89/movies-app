@@ -2,7 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const db = require('./db')
-const movieRouter2 = require('./routes/movie-router-2')
+const movieRouter = require('./routes/movie-router')
 const app = express()
 const config = require('./config')
 const awilix = require('awilix')
@@ -24,7 +24,7 @@ const container = awilix.createContainer({
 container.register({ MovieModel: awilix.asValue(Movie) })
 container.register({ MovieRepository: awilix.asClass(MovieRepository) })
 container.register({ MovieController: awilix.asClass(MovieController) })
-container.register({ MovieRouter: awilix.asFunction(movieRouter2)})
+container.register({ MovieRouter: awilix.asFunction(movieRouter)})
 
 //express app and db setup
 app.use(bodyParser.urlencoded({ extended: true }))
