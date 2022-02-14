@@ -1,6 +1,6 @@
 class MovieController {
-    constructor({ MovieRepository }) {
-        this.repository = MovieRepository;
+    constructor({ MovieService }) {
+        this.movieService = MovieService;
 
         //bind controller methods to the instance
         this.getAll = this.getAll.bind(this);
@@ -10,16 +10,16 @@ class MovieController {
         this.update = this.update.bind(this);
     }
 
+    buildResponseFromServiceResult(res, serviceResult) {
+        if(!serviceResult.success)
+            return res.status(404).json({ success: false, error: serviceResult.error, data: serviceResult.data });
+        return res.status(200).json({ success: true, data: serviceResult.data });
+    }
+
     getAll(req, res) {
-        this.repository.getAll()
-        .then(movies => {
-            if (!movies.length) {
-                return res
-                    .status(404)
-                    .json({ success: false, error: `Movie not found` })
-            }
-    
-            return res.status(200).json({ success: true, data: movies })
+        this.movieService.getAll()
+        .then(result => {
+            return this.buildResponseFromServiceResult(res, result);
         })
         .catch(err => {
             console.log(err);
@@ -28,14 +28,9 @@ class MovieController {
     }
 
     getById(req, res) {
-        this.repository.getById(req.params.id)
-        .then(movie => {
-            if (!movie) {
-                return res
-                    .status(404)
-                    .json({ success: false, error: `Movie not found` });
-            }
-            return res.status(200).json({ success: true, data: movie });
+        this.movieService.getById(req.params.id)
+        .then(result => {
+            return this.buildResponseFromServiceResult(res, result);
         })
         .catch(err => {
             console.log(err);
@@ -44,20 +39,9 @@ class MovieController {
     }
 
     delete(req, res) {
-        this.repository.delete(req.params.id)
-        .then((movie, err) => {
-
-            if (err) {
-                return res.status(400).json({ success: false, error: err })
-            }
-    
-            if (!movie) {
-                return res
-                    .status(404)
-                    .json({ success: false, error: `Movie not found` })
-            }
-    
-            return res.status(200).json({ success: true, data: movie })
+        this.movieService.delete(req.params.id)
+        .then(result => {
+            return this.buildResponseFromServiceResult(res, result);
         })
         .catch(err => {
             console.log(err);
@@ -75,17 +59,9 @@ class MovieController {
             })
         }
 
-        this.repository.create(body)
-        .then(movie => {
-            if (!movie) {
-                return res.status(400).json({ success: false, error: err })
-            }
-
-            return res.status(201).json({
-                success: true,
-                id: movie._id,
-                message: 'Movie created!',
-            })
+        this.movieService.create(body)
+        .then(result => {
+            return this.buildResponseFromServiceResult(res, result);
         })
         .catch(err => {
             console.log(err);
@@ -100,13 +76,9 @@ class MovieController {
         if (!body)
             return res.status(400).json({ success: false, error: 'You must provide a movie to update' });
 
-        this.repository.update(id, body)
-        .then(movie => {
-            return res.status(200).json({
-                success: true,
-                id: movie._id,
-                message: 'Movie updated!',
-            })
+        this.movieService.update(id, body)
+        .then(result => {
+            return this.buildResponseFromServiceResult(res, result);
         })
         .catch(err => {
             console.log(err);

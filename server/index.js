@@ -9,6 +9,7 @@ const awilix = require('awilix')
 
 //dependencies injected by awilix
 const MovieController = require('./controllers/movie-controller')
+const MovieService = require('./services/movie-service')
 const MovieRepository = require('./repositories/movie-repository')
 const Movie = require('./models/movie-model')
 
@@ -23,6 +24,7 @@ const container = awilix.createContainer({
 
 container.register({ MovieModel: awilix.asValue(Movie) })
 container.register({ MovieRepository: awilix.asClass(MovieRepository) })
+container.register({ MovieService: awilix.asClass(MovieService) })
 container.register({ MovieController: awilix.asClass(MovieController) })
 container.register({ MovieRouter: awilix.asFunction(movieRouter)})
 
