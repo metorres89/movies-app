@@ -16,7 +16,22 @@ class MovieController extends BaseController {
     }
 
     getAll(req, res) {
-        this.movieService.getAll()
+
+        //pagination data
+        let page = req.query.page;
+        let psize = req.query.psize;
+
+        //filters
+        let name = req.query.name;
+        let time = req.query.time;
+        let rating = req.query.rating;
+        
+        console.log(`${name},${time},${rating}`);
+
+        this.movieService.getAll(
+            { page: page, pageSize: psize}, 
+            { name: name, time: time, rating: rating }
+        )
         .then(result => {
             return this.responseFromServiceResult(res, result);
         })

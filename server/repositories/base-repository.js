@@ -10,6 +10,24 @@ class BaseRepository {
     async getAll() {
         return await this.model.find();
     }
+
+    async getAllWithFilters(pageInfo, filters) {
+
+        let conditions = {};
+        
+        if(filters.name)
+            conditions['name'] = filters.name;
+
+        if(filters.rating)
+            conditions['rating'] = filters.rating;
+        
+        if(filters.time)
+            conditions['time'] = { '$all': filters.time }; //$all: matches documents which time array property containing specified value
+
+        console.log(conditions);
+
+        return await this.model.find(conditions);
+    }
     
     async create(entity) {
         return await this.model.create(entity);

@@ -20,10 +20,15 @@ class MovieService {
         }
     }
 
-    async getAll() {
+    async getAll(pageInfo, filters) {
         try {
-            const movies = await this.movieRepo.getAll();
-            
+
+            let movies = null;
+            if(!filters.name && !filters.rating && !filters.time)
+                movies = await this.movieRepo.getAll();
+            else
+                movies = await this.movieRepo.getAllWithFilters(pageInfo, filters);
+                
             if (!movies.length)
                 return new ServiceResult(false, new Error('Movies not found'), null);
 
