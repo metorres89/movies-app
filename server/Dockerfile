@@ -7,6 +7,8 @@ WORKDIR /usr/src/app
 # Install app dependencies
 COPY package.json package.json
 COPY package-lock.json package-lock.json
+COPY .env .env
+COPY .env.production .env.production
 
 # If you are building your code for production
 RUN npm ci --only=production

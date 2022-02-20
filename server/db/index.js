@@ -1,7 +1,10 @@
 const mongoose = require('mongoose')
+const config = require('../config')
+
+const connectionString = config.env.MONGO_DB_CONNECTION_STRING
 
 mongoose
-    .connect('mongodb://mongo:27017/cinema', { useNewUrlParser: true })
+    .connect(connectionString, { useNewUrlParser: true })
     .catch(e => {
         console.error('Connection error', e.message)
     })

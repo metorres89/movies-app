@@ -1,8 +1,7 @@
 import { React } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { NavBar } from '../components'
-import { MovieList, MovieInsert, MovieUpdate } from '../pages'
-import 'bootstrap/dist/css/bootstrap.min.css'
+import { MovieList, BasicTable, MovieInsert, MovieUpdate } from '../pages'
 
 function App() {
   return (
@@ -10,8 +9,6 @@ function App() {
         <NavBar />
         <Routes>
           <Route path="/movies/list" element={<MovieList></MovieList>}/>
-          <Route path="/movies/create" element={<MovieInsert></MovieInsert>}/>
-          <Route path="/movies/update/:id" element={<MovieUpdate></MovieUpdate>}/> 
         </Routes>
     </Router>
   );
