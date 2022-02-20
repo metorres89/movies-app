@@ -20,11 +20,15 @@ class MovieService {
         }
     }
 
+    filtersExist(filters) {
+        return filters.name || filters.rating || filters.time;
+    }
+
     async getAll(pageInfo, filters) {
         try {
 
             let movies = null;
-            if(!filters.name && !filters.rating && !filters.time)
+            if(!this.filtersExist(filters))
                 movies = await this.movieRepo.getAll();
             else
                 movies = await this.movieRepo.getAllWithFilters(pageInfo, filters);
