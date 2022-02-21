@@ -13,6 +13,10 @@ class BaseRepository {
         return await this.model.find(conditions);
     }
     
+    async getPage(conditions, pageOptions) {
+        return await this.model.paginate(conditions, pageOptions);
+    }
+
     async create(entity) {
         return await this.model.create(entity);
     }
